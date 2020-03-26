@@ -18,7 +18,7 @@ export default function Incidents() {
         </View>
 
         <Text style = { styles.title}> Bem-vindo!</Text>
-        <Text style = { styles.description}> Escolha um dos casos abaixo e salve</Text>
+        <Text style = { styles.description}> Escolha um dos casos abaixo e salve the day!</Text>
 
 
         <View style = {styles.incidentList}>
