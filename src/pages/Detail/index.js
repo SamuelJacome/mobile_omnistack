@@ -1,7 +1,7 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
 import{ useNavigation, useRoute } from '@react-navigation/native'
-// import * as MailComposer from 'expo-mail-composer'
+import * as MailComposer from 'expo-mail-composer'
 import { View, Image, Text, TouchableOpacity, Linking } from 'react-native';
 
 import logoImg from '../../assets/logo.png'
@@ -11,27 +11,29 @@ import styles from './styles';
 export default function Detail() {
 
   const navigation = useNavigation();
-  const route = useRoute;
+  const route = useRoute();
 
   const incident = route.params.incident;
-  const message = 'Olá APAD, estou entrando em contato pois gostaria de ajudar no caso "Cadelinha atropelada"';
+  const message = `Olá ${incident.name}, estou entrando em contato pois gostaria de ajudar no caso ${incident.title} com o valor ${Intl.NumberFormat('pt-BR', { 
+    style: 'currency',
+     currency: 'BRL'}).format(incident.value)}`;
 
   function navigateBack(){
 
     navigation.goBack()
   }
 
-  // function sendMail (){
-  //   MailComposer.composeAsync({
-  //     subject: 'Herói do caso: Cadelinha atropelada',
-  //     recipients: ['samuelvictor@rede.ulbra.br'],
-  //     body: message,
-  //   });
+  function sendMail (){
+    MailComposer.composeAsync({
+      subject: `Herói do caso: ${incident.title}`,
+      recipients: [incident.email],
+      body: message,
+    });
 
-  // }
+  }
 
   function sendWhats(){
-    Linking.openURL(`whatsapp://send?phone=556381299293?text=${message}`);
+    Linking.openURL(`whatsapp://send?phone=${incident.whatsapp}&text=${message}`);
 
   }
 
@@ -49,7 +51,7 @@ export default function Detail() {
       <View style={styles.incident}>
 
         <Text style={[styles.incidentProperty, { marginTop: 0}]} >ONG: </Text>
-        <Text style={styles.incidentValue}>{incident.name} </Text>
+        <Text style={styles.incidentValue}>{incident.name} de {incident.city}/{incident.uf} </Text>
 
         <Text style={styles.incidentProperty}>Caso: </Text>
         <Text style={styles.incidentValue}> {incident.description} </Text>
@@ -76,10 +78,10 @@ export default function Detail() {
           <Text style={styles.actionsText}>WhatsApp</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.action} >
+        <TouchableOpacity style={styles.action} onPress={sendMail}>
           <Text style={styles.actionsText}>E-mail</Text>
         </TouchableOpacity>
-        {/* onPress={sendMail} */}
+     
       </View>
       </View>
 
